@@ -1,0 +1,69 @@
+# -----------------------------
+# Python / Virtual Environment
+# -----------------------------
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pkl
+*.pickle
+
+# Virtual environment
+.venv/
+env/
+venv/
+
+# Jupyter Notebooks
+.ipynb_checkpoints/
+
+# VSCode / JetBrains
+.vscode/
+.idea/
+
+# -----------------------------
+# Data Files (DO NOT TRACK)
+# -----------------------------
+data/
+*.mp4
+*.avi
+*.mov
+*.zip
+
+# UCF101 skeleton annotations
+ucf101_2d.pkl
+*.pkl
+
+# -----------------------------
+# Model Outputs / Checkpoints
+# -----------------------------
+checkpoints/
+*.pt
+*.pth
+*.ckpt
+
+# Training logs
+logs/
+*.log
+
+# -----------------------------
+# Build / Packaging
+# -----------------------------
+build/
+dist/
+*.egg-info/
+*.egg
+
+# -----------------------------
+# OS / Misc
+# -----------------------------
+.DS_Store
+Thumbs.db
+
+# -----------------------------
+# Python cache / temp files
+# -----------------------------
+*.cache
+*.tmp
+*.temp
+*.swp
+*.swo
