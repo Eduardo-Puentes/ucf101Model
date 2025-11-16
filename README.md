@@ -1,6 +1,6 @@
 # UCF101 Action Recognition (Skeleton-Based)
 
-Este proyecto implementa un modelo de deep learning para clasificar acciones humanas usando el dataset **UCF101**, trabajando únicamente con las **coordenadas de esqueletos 2D** proporcionadas por MMAction2.
+Este proyecto implementa un modelo de deep learning para clasificar acciones humanas usando el dataset UCF101, trabajando únicamente con las coordenadas de esqueletos 2D proporcionadas por MMAction2.
 
 El objetivo fue entrenar un modelo que pueda reconocer acciones utilizando secuencias de keypoints en lugar de video completo, aplicar un modelo baseline, mejorarlo con una arquitectura profunda y generar predicciones.
 
@@ -8,8 +8,8 @@ El objetivo fue entrenar un modelo que pueda reconocer acciones utilizando secue
 
 ## 1. Dataset
 
-- Dataset original: **UCF101**
-- Representación utilizada: **esqueletos 2D** en formato .pkl
+- Dataset original: UCF101
+- Representación utilizada: esqueletos 2D en formato .pkl
 - Archivo utilizado en este proyecto: https://download.openmmlab.com/mmaction/v1.0/skeleton/data/ucf101_2d.pkl
 
 El archivo debe guardarse en:
@@ -22,7 +22,7 @@ Se trabajó con 5 clases del dataset para facilitar el entrenamiento.
 ## 2. Modelos implementados
 
 ### Baseline
-- Calcula el **promedio temporal** de los keypoints.
+- Calcula el promedio temporal de los keypoints.
 - Clasifica con un MLP pequeño.
 - Funciona como comparación inicial.
 
