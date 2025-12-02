@@ -1,4 +1,3 @@
-# src/datasets.py
 import pickle
 from typing import List, Optional, Dict, Any
 
@@ -7,7 +6,7 @@ import torch
 from torch.utils.data import Dataset, random_split
 
 
-class UCF101SkeletonDataset(Dataset):
+class UCF101SkeletonDataset(Dataset): 
     """
     Dataset para UCF101 con esqueletos 2D en formato MMAction2.
 
@@ -28,7 +27,7 @@ class UCF101SkeletonDataset(Dataset):
         super().__init__()
 
         with open(pkl_path, "rb") as f:
-            data = pickle.load(f, encoding="latin1")  # latin1 por compatibilidad
+            data = pickle.load(f, encoding="latin1")
 
         self.splits: Dict[str, List[str]] = data["split"]
         self.annotations: List[Dict[str, Any]] = data["annotations"]
@@ -59,8 +58,7 @@ class UCF101SkeletonDataset(Dataset):
                 "Revisa los IDs de clase y los nombres de split."
             )
 
-        # Determinamos V (número de joints) a partir de la primera muestra
-        example_kp = self.samples[0]["keypoint"]  # shape: M x T x V x C
+        example_kp = self.samples[0]["keypoint"]
         _, _, V, C = example_kp.shape
         assert C == 2, "Se esperaban keypoints 2D (C=2)."
         self.num_joints = V
@@ -77,11 +75,11 @@ class UCF101SkeletonDataset(Dataset):
         """
         M = keypoint.shape[0]
         if M == 1:
-            return keypoint[0]  # T x V x C
+            return keypoint[0]
 
-        avg_scores = keypoint_score.mean(axis=(1, 2))  # M
+        avg_scores = keypoint_score.mean(axis=(1, 2)) 
         main_idx = int(np.argmax(avg_scores))
-        return keypoint[main_idx]  # T x V x C
+        return keypoint[main_idx]
 
     def _normalize_coords(self, kp: np.ndarray, img_shape):
         """
@@ -104,11 +102,9 @@ class UCF101SkeletonDataset(Dataset):
         if T == self.max_frames:
             return seq
         if T > self.max_frames:
-            # recortamos centrado aproximadamente
             start = max(0, (T - self.max_frames) // 2)
             end = start + self.max_frames
             return seq[start:end]
-        # padding con ceros al final
         pad_len = self.max_frames - T
         pad = np.zeros((pad_len, D), dtype=seq.dtype)
         return np.concatenate([seq, pad], axis=0)
@@ -116,29 +112,25 @@ class UCF101SkeletonDataset(Dataset):
     def __getitem__(self, idx: int):
         ann = self.samples[idx]
         label = int(ann["label"])
-        img_shape = ann["img_shape"]  # (h, w)
+        img_shape = ann["img_shape"]
 
-        keypoint = ann["keypoint"]          # M x T x V x C
-        keypoint_score = ann["keypoint_score"]  # M x T x V
+        keypoint = ann["keypoint"] 
+        keypoint_score = ann["keypoint_score"]
 
-        # Seleccionamos a la persona principal
-        kp_main = self._select_main_person(keypoint, keypoint_score)  # T x V x C
+        kp_main = self._select_main_person(keypoint, keypoint_score)
 
-        # Normalizamos coordenadas
-        kp_main = self._normalize_coords(kp_main, img_shape)  # T x V x C
+        kp_main = self._normalize_coords(kp_main, img_shape)
 
-        # Reordenamos a (T x 2V)
         T, V, C = kp_main.shape
-        seq = kp_main.reshape(T, V * C)  # T x (2V)
+        seq = kp_main.reshape(T, V * C)
 
-        # Padding / crop a longitud fija
-        seq_fixed = self._pad_or_crop(seq)  # max_frames x (2V)
+        seq_fixed = self._pad_or_crop(seq) 
 
-        # Convertimos a tensores
         seq_tensor = torch.from_numpy(seq_fixed).float()
         label_tensor = torch.tensor(label, dtype=torch.long)
+        seq_len_tensor = torch.tensor(min(T, self.max_frames), dtype=torch.long)
 
-        return seq_tensor, label_tensor
+        return seq_tensor, label_tensor, seq_len_tensor
 
 
 def train_val_split(
